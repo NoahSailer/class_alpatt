@@ -2979,6 +2979,8 @@ double ddV_p_scf(
 /** Fianlly we can obtain the overall potential \f$ V = V_p*V_e \f$
  */
 
+
+/*
 double V_scf(
              struct background *pba,
              double phi) {
@@ -2995,4 +2997,48 @@ double ddV_scf(
                struct background *pba,
                double phi) {
   return ddV_e_scf(pba,phi)*V_p_scf(pba,phi) + 2*dV_e_scf(pba,phi)*dV_p_scf(pba,phi) + V_e_scf(pba,phi)*ddV_p_scf(pba,phi);
+}
+*/
+
+
+
+/*
+ * Coding up the alpha-attractor
+ * 
+ * V(phi) = gamma sqrt(6 alpha) (tanh(gamma / (sqrt(6 alpha))) + 1)
+ * 
+ * up to a cosmological constant
+ *
+ * below we identify scf_lambda=gamma and scf_alpha=alpha
+*/
+
+
+double V_scf(
+             struct background *pba,
+             double phi) {
+  double scf_lambda = pba->scf_parameters[0];
+  double scf_alpha  = pba->scf_parameters[1];
+  double scf_A      = pba->scf_parameters[2];
+  double prefac = scf_lambda*pow(6*scf_alpha,0.5);
+  double x = phi/pow(6*scf_alpha,0.5);
+  return  prefac*2*exp(2*x)/(1+exp(2*x)) + scf_A*3.968e-8;
+}
+
+double dV_scf(
+              struct background *pba,
+              double phi) {
+  double scf_lambda = pba->scf_parameters[0];
+  double scf_alpha  = pba->scf_parameters[1];
+  double x = phi/pow(6*scf_alpha,0.5);
+  return scf_lambda*4/pow(exp(x)+exp(-x),2);
+}
+
+double ddV_scf(
+               struct background *pba,
+               double phi) {
+  double scf_lambda = pba->scf_parameters[0];
+  double scf_alpha  = pba->scf_parameters[1];
+  double prefac = scf_lambda/pow(6*scf_alpha,0.5);
+  double x = phi/pow(6*scf_alpha,0.5);  
+  return prefac*8*(exp(-x) - exp(x))/pow(exp(x)+exp(-x),3);
 }

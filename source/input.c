@@ -1157,6 +1157,7 @@ int input_get_guess(double *xguess,
   int i;
   double Omega_M, a_decay, gamma, Omega0_dcdmdr=1.0;
   int index_guess;
+  printf("I like pizza");
 
   /* Cheat to read only known parameters: */
   pfzw->fc.size -= pfzw->target_size;
@@ -1212,6 +1213,7 @@ int input_get_guess(double *xguess,
       dxdy[index_guess] = 1./a_decay/ba.h/ba.h;
       break;
     case Omega_scf:
+      printf("I like all pizza");
       /* *
        * This guess is arbitrary, something nice using WKB should be implemented.
        * Version 2 uses a fit
@@ -1225,6 +1227,7 @@ int input_get_guess(double *xguess,
       }
       else{
         /* Default: take the passed value as xguess and set dxdy to 1. */
+        printf("Is this working?");
         xguess[index_guess] = ba.scf_parameters[ba.scf_tuning_index];
         dxdy[index_guess] = 1.;
       }
